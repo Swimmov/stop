@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.myfkd.stopit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -24,16 +24,15 @@ public class GameScreen implements Screen {
 	SpriteBatch batch;
 	Texture tarakanImg;
 	Texture tapokImg;
-	Texture batcImg;
 	Sound tarakanSound;
 	Sound tarakanSound2;
 	Music peremenMusic;
 	Rectangle tapok;
 	Vector3 touchPos;
-Array<Rectangle> runs;
-long lastRunTime;
-int tarCatchered;
-int tarEscaped;
+	Array<Rectangle> runs;
+	long lastRunTime;
+	static int tarCatchered;
+	static int tarEscaped;
 
 	int timeNano;
 	int count;
@@ -45,7 +44,7 @@ int tarEscaped;
 		count = 0;
 		tarakanSpeed = 200;
 
-			this.game = gam;
+		this.game = gam;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800,480);
 		batch = new SpriteBatch();
@@ -95,8 +94,6 @@ int tarEscaped;
 		game.batch.begin();
 		game.font.draw(game.batch, "Bags Slapped :" + tarCatchered, 10, 450);
 		game.font.draw(game.batch, "Escaped :" + tarEscaped, 10, 420);
-//		game.font.draw(game.batch, "timeNano :" + timeNano, 10, 390);
-//		game.font.draw(game.batch, "tarakanSpeed :" + tarakanSpeed, 10, 370);
 		game.batch.draw(tapokImg, tapok.x, tapok.y);
 		for (Rectangle run: runs) {
 			game.batch.draw(tarakanImg, run.x, run.y);
@@ -119,7 +116,7 @@ int tarEscaped;
 		if (tapok.y < 0 ) tapok.y = 0;
 		if (tapok.y > 480-149 ) tapok.y = 480 - 150;
 
-			if (TimeUtils.nanoTime() - lastRunTime > timeNano) {
+		if (TimeUtils.nanoTime() - lastRunTime > timeNano) {
 			spawnRun();
 			count ++;
 			if (count > 20 && timeNano <= 100000000) {
@@ -143,6 +140,10 @@ int tarEscaped;
 				tarakanSound2.play();
 				iter.remove();
 				tarEscaped ++;
+				if(tarEscaped==20){
+					game.setScreen(new SecondMenuScreen(game));
+					dispose();
+				}
 			}
 			if(run.overlaps(tapok)) {
 				tarCatchered ++;
@@ -178,7 +179,6 @@ int tarEscaped;
 	public void dispose () {
 		batch.dispose();
 		tapokImg.dispose();
-		batcImg.dispose();
 		tarakanImg.dispose();
 		tarakanSound.dispose();
 		peremenMusic.dispose();

@@ -5,11 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class MainMenuScreen implements Screen {
+public class SecondMenuScreen implements Screen {
     final Stopee game;
     OrthographicCamera camera;
+    GameScreen gameScreen;
 
-    public MainMenuScreen(Stopee gam) {
+    public SecondMenuScreen(Stopee gam) {
         game = gam;
 
         camera = new OrthographicCamera();
@@ -24,7 +25,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1f, 1f, 1f, 0.25f);
+        Gdx.gl.glClearColor(1f, 1f, 1f, .25f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
@@ -32,16 +33,19 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         game.batch.draw(game.texture, 0, 0);
-        game.font.draw(game.batch, "DON'T LET IT GO! GAME WILL STOP IF 20 ESCAPED", 70, 150);
-        game.font.draw(game.batch, "TOUCH THE SCREEN TO START!", 70, 100);
-
+        game.font.draw(game.batch, "YOUR RESULT: ",70, 270);
+        game.font.draw(game.batch, "ESCAPED Total: " + GameScreen.tarEscaped, 70, 200);
+        game.font.draw(game.batch, "FAILED TO ESCAPE Total: " + GameScreen.tarCatchered, 70, 130);
+        game.font.draw(game.batch, "TOUCH THE SCREEN TO START NEW GAME!", 70, 60);
         game.batch.end();
 
-        if (Gdx.input.isTouched()) {
+
+        if (Gdx.input.justTouched()) {
+            GameScreen.tarEscaped = 0;
+            GameScreen.tarCatchered = 0;
             game.setScreen(new GameScreen(game));
             dispose();
         }
-
     }
 
     @Override
@@ -66,6 +70,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+
 
     }
 }
